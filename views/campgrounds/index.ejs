@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Yelpcamp
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+
+</head>
+
+
+<body class="d-flex flex-column vh-100">
+    <%- include('../partials/navbar')%>
+
+        <main >
+            <%- include("../partials/flash")%>
+            <script src="https://kit.fontawesome.com/320c27953c.js" crossorigin="anonymous"></script>
+            <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+            <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css">
+                    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+
+        <link rel="stylesheet" href="/stylesheet/app.css">
+        <div id="cluster-map"style="width:100%"></div>
+        <div class="container mx-auto">
+        <h1 class="d-flex justify-content-center mt-4 mb-4">All Campgrounds</h1>
+        <div class="input-group mb-3"style="width:70%;margin:auto">
+            <i class="fas fa-search-location"style="margin:10px"></i>
+           <input type="text" class="form-control" placeholder="Search your Campground" name="campgrounds[title]" id="search" onkeyup="searchFunc()">
+          </div>
+            
+            
+        <% for (let camp of campgrounds){%>
+            <script>
+                searchFunc=()=>{
+                    let query=document.getElementById("search");
+                    let result=query.value;
+                    let name =document.getElementById("campName");
+                    if(result.equals(name))
+                    console.log("Found the campground",name);
+                }
+            </script>
+            
+    
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <% if (camp.images.length){%>
+                            <img class="img-fluid" src="<%=camp.images[0].url%>">
+                            <%}else {%>
+                                <img class="img-fluid"
+                                    src="https://res.cloudinary.com/dvftglxqk/image/upload/v1616783047/Yelpcamp/zrnb2jfsqb08npclcwda.jpg">
+                                <%}%>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h4 class="card-title" id="campName">
+                                <%=camp.title%>
+                            </h4>
+                            <p class="card-text">
+                                <%=camp.description%>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <%=camp.location%>
+                                </small>
+                            </p>
+                            <a href="/campgrounds/<%=camp._id%>" class="btn btn-primary">More Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%}%>
+                <a href="/campgrounds/new">New Campground</a>
+                <div id="data" hidden >
+                    <% for (let camp of campgrounds){%>
+                    <%=camp.geometry.coordinates%>
+                    ||
+                    <%}%>
+                </div>
+                <script src="" async defer></script>
+                <script>
+                    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+                    const a= document.getElementById("data");
+                    const s=a.innerText;
+                    const u=s.trim();
+                    const b= u.split('||');
+                    b.pop();
+                    const f= []
+                    b.forEach(c=>{
+                        //console.log(c);
+                        let k=c.trim();
+                        k=k.split(',');
+                        let x= Number(k[0]);
+                        let y= Number(k[1]);
+                       let z={
+                           type:"Features",
+                           properties: {
+                               id:"6043cd92d4c19f0e54b5ca0f",
+                               mag:2.4,
+                               time:Date.now(),
+                               felt:null,
+                               tsunami:0
+                            },
+                            geometry:{
+                                type:"Point",
+                                coordinates:[x,y]
+                            }
+                       }
+                       f.push(z);
+                    })
+                    // const campgrounds ={features:b};
+                     /*const campgrounds={"features": [
+{ "type": "Feature", "properties": { "id": "ak16994521", "mag": 2.3, "time": 1507425650893, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ -151.5129, 63.1016, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": 1.7, "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ -150.4048, 63.1224, 105.5 ] } },
+{ "type": "Feature", "properties": { "id": "ak16994517", "mag": 1.6, "time": 1507424832518, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ -151.3597, 63.0781, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": "ci38021336", "mag": 1.42, "time": 1507423898710, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ -118.497, 34.299667, 7.64 ] } }]}*/
+                    const campgrounds={features:f} 
+                </script>
+                
+                <script src="/javascript/clusterMap.js"></script>
+            </div>
+            </main>
+
+        <%- include('../partials/footer')%>
+        
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"
+                integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi"
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
+                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG"
+                crossorigin="anonymous"></script>
+            <script src=/javascript/validateForm.js></script>
+            <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
