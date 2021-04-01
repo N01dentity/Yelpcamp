@@ -40,7 +40,7 @@
             <script src="/campgrounds">
 
             </script>
-            
+            <% if(campgrounds.length){%>
             
             <% for (let camp of campgrounds){%>
                 <div class="card mb-3">
@@ -72,6 +72,13 @@
                     </div>
                 </div>
             <%}%>
+            <%}else{%>
+                <div class="container">
+                    <h5 class="row justify-content-center">
+                       Sorry:( Result Not Found!!
+                    </h5>
+                </div>
+                <%}%>
             <div class="container">
                 <div class="row justify-content-between">
                     <div class="col-3 ">

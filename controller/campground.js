@@ -10,6 +10,17 @@ module.exports.index = async (req, res) => {
     let campgrounds = await Campground.find({});
     res.render("./campgrounds/index", { campgrounds });
 };
+
+module.exports.filter=async(req,res)=>{
+    const searchName=req.body.campgrounds.title;
+    console.log(searchName);
+   // Campground.createIndex({name:"text",description:"text"})
+    let campgrounds =await Campground.find({title:{$regex:searchName,$options:'i'}});
+    //let campgrounds =await Campgrounds.find({$text:{$search:searchName}});
+   res.render("./campgrounds/filter",{campgrounds});
+   //res.send(campgrounds);
+}
+
 module.exports.renderNewForm = (req, res) => {
     res.render("./campgrounds/new");
 };
