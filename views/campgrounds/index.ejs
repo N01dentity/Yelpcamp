@@ -120,6 +120,25 @@
                     })
                     const campgrounds={features:f} 
                 </script>
+                <script>
+                    function func()
+                    {
+                        let card=document.getElementsByClassName('card');
+                        let filter=document.getElementById('search').value.toUpperCase();
+                        for(let i=0;i<card.length;i++)
+                        {
+                            let title=card[i].getElementsByClassName('card-title')[0];
+                            if(title)
+                            {
+                                let text=title.innerHTML.toUpperCase();
+                                if(text.indexOf(filter)>-1)
+                                card[i].style.display="block";
+                                else
+                                card[i].style.display="none";
+                            }
+                        }
+                    }
+                </script>
                 
                 <script src="/javascript/clusterMap.js"></script>
             </div>
